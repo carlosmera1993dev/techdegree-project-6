@@ -1,5 +1,6 @@
 const gameKeyboard = document.getElementById('qwerty');
 const gamePhrase = document.getElementById('phrase');
+let scoreboard = document.getElementById('scoreboard').firstElementChild;
 
 //Variable for reseting the game 
 let gameStatus = false;
@@ -21,20 +22,24 @@ function checkWin() {
     let classLetter = document.querySelectorAll('.letter');
     let classShow = document.querySelectorAll('.show');
     let title = overlay.firstElementChild;
-    if (classLetter.length === classShow.length) {
-        overlay.className = 'win';
-        overlay.style.display = '';
-        title.textContent = 'You win!'
-        startButton.textContent = 'Play again';
-        gameStatus = true;
-        resetGame();
+    if (classLetter.length === classShow.length) {        
+        window.setTimeout(() => {
+            overlay.className = 'win';
+            overlay.style.display = '';
+            title.textContent = 'You win!'
+            startButton.textContent = 'Play again';
+            gameStatus = true;
+            resetGame();
+        }, 1000);
     } else if (missed === 5) {
-        overlay.className = 'lose';
-        overlay.style.display = '';
-        title.textContent = "You lost!";
-        startButton.textContent = 'Play again';
-        gameStatus = true;
-        resetGame();
+        window.setTimeout(() => {
+            overlay.className = 'lose';
+            overlay.style.display = '';
+            title.textContent = "You lost!";
+            startButton.textContent = 'Play again';
+            gameStatus = true;
+            resetGame();
+        }, 1000);
     }
 }
 
@@ -104,23 +109,31 @@ function checkLetter(button) {
 
 //function for removing tries
 function removeTries() {
-    let scoreboard = document.getElementById('scoreboard').firstElementChild;
     let heart = scoreboard.children;
-    scoreboard.removeChild(heart[0]);
+    heart[missed].style.display = 'none';
 }
 
 //Listening for clicks and handling letters
 gameKeyboard.addEventListener('click', (event) => {
-    const key = event.target;
-    key.className = 'chosen';
-    key.disabled = true;
-    let letterFound = checkLetter(key.textContent);
-    if (letterFound === null) {
-        missed += 1;
-        removeTries();
+    if (event.target.tagName === 'BUTTON') {
+        const key = event.target;
+        key.className = 'chosen';
+        key.disabled = true;
+        let letterFound = checkLetter(key.textContent);
+        if (letterFound === null) {
+            removeTries();
+            missed += 1;
+        }
+        checkWin();
     }
-    checkWin();
 })
+
+//Function for displaying heart icons
+function createHearts() { 
+    for (let i = 0; i < scoreboard.children.length; i++) {
+        scoreboard.children[i].style.display = '';
+    }
+}  
 
 //Function for reseting the game 
 function resetGame() {
@@ -134,10 +147,8 @@ function resetGame() {
     }
     //Reset tries
     missed = 0;
-    //add hearts until there are five 
-
-
-
+    //Display all hearts again 
+    createHearts();
     //clear old phrase 
     gamePhrase.firstElementChild.innerHTML = '';
     //generate new random phrase
