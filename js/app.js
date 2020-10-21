@@ -79,9 +79,10 @@ function addPhraseToDisplay(arr) {
         //Add conditional to check if character is letter or space
         if (currentChar !== ' ') {
             li.className = 'letter'
+        } else {
+            li.className = 'space';
         }
-        //append li to the ul
-        // gamePhrase.appendChild(li);
+        //append li to the ul        
         gamePhrase.firstElementChild.appendChild(li);
     }
 }
@@ -110,7 +111,7 @@ function checkLetter(button) {
 //function for removing tries
 function removeTries() {
     let heart = scoreboard.children;
-    heart[missed].style.display = 'none';
+    heart[missed].firstElementChild.src = 'images/lostHeart.png';
 }
 
 //Listening for clicks and handling letters
@@ -131,7 +132,8 @@ gameKeyboard.addEventListener('click', (event) => {
 //Function for displaying heart icons
 function createHearts() { 
     for (let i = 0; i < scoreboard.children.length; i++) {
-        scoreboard.children[i].style.display = '';
+        let heart = scoreboard.children;
+        heart[i].firstElementChild.src = 'images/liveHeart.png';
     }
 }  
 
@@ -156,4 +158,3 @@ function resetGame() {
     addPhraseToDisplay(phraseArray);
 }
 
-//Fix hightlighting of rows!!!!!!!
